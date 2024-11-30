@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Custody Calendar</title>
+  <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+
+  <h2 style="text-align:center">Custody Calendar</h2>
+  <form hx-post="/initSchedule" hx-target="#calendar">
+    <input type="radio" id="pA" name="AFirst" checked value="parentA">
+    <label for="pA">Parent A First</label>
+    <input type="radio" id="pB" name="AFirst" value="parentB">
+    <label for="pB">Parent B First</label><br><br>
+    <div style="text-align: left;"> Parent A's Allotment:
+      <input type="number" name="ParentATime" value="{{ .ParentTime }}"><select name="ParentAUnit">
+        {{ range .TimeUnit }}
+        <option value="{{ . }}"> {{ . }} </option>
+        {{ end }}
+      </select>
+    </div>
+    <div style="text-align: justify;"> Parent B's Allotment: <input type="number" name="ParentBTime"
+        value="{{ .ParentTime }}"><select name="ParentBUnit">
+        {{ range .TimeUnit }}
+        <option value="{{ . }}"> {{ . }} </option>
+        {{ end }}
+      </select>
+    </div>
+    <br>
+    <div style="text-align:center;">Start Date: <input type="date" name="startYear" value="01/01/2024">
+      For How Many Years: <input type="number" name="forYears" value="1"><br>
+      <br>
+      Timezone: <select name="timeZone">
+        {{ range .Timezones }}
+        <option value="{{ . }}" {{ if eq . $.Timezone }} selected {{ end }}> {{ . }}</option>
+        {{ end }}
+      </select>
+    </div><br><br>
+    Child's Birthday: <input type="date" name="childBirthday" value="01/01/2000"></input>
+    <br><br>
+    <table style="margin-left: 15%; width:75%;">
+      <thead>
+        <tr>
+          <th colspan="7"> Holidays </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          {{ range $i, $day := .Holidays }}
+          <td>
+            <div style="text-decoration-line: underline;">{{ $day }}</div><br>
+            <label><input type="radio" id="{{ $day }}_ATurn" name="{{ $day }}_Turn" value="A">A</label>
+            <label><input type="radio" id="{{ $day }}_BTurn" name="{{ $day }}_Turn" value="B">B</label><br>
+            <hr style="border-top: 1px dashed">
+            <input type="checkbox" id="{{ $day }}_both" name="{{ $day }}" value="both">
+            <label for="{{ $day }}_both"> Both </label><br>
+            <input type="checkbox" id="{{ $day }}_A" name="{{ $day }}" value="A">
+            <label for="{{ $day }}_A"> Parent A </label><br>
+            <input type="checkbox" id="{{ $day }}_B" name="{{ $day }}" value="B">
+            <label for="{{ $day }}_B"> Parent B </label><br>
+          </td>
+          {{ if eq (mod $i 5 ) 4 }}
+        </tr>
+        <tr> {{ end }}
+          {{ end }}
+        </tr>
+
+      </tbody>
+    </table><br>
+    <button name="gen" type="submit">Generate Schedule</button>
+  </form>
+
+  <div id="calendar" hx-get="/calendar" hx-trigger="click[event.target.name=='gen'] from:button[name='gen']">
+  </div>
+</body>
+
+</html>

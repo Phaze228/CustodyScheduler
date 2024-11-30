@@ -1,0 +1,54 @@
+<div style="margin: auto; text-align: justify;">
+  {{ .A_String }} <br>
+  <div style="color: {{ .A_Color }};"> &#9632;</div>
+  Days in Schedule: {{ .A_Count }}<br>
+</div>
+<hr>
+</hr>
+<div style="margin: auto; text-align: justify;">
+  {{ .B_String }} <br>
+  <div style="color: {{ .B_Color }};"> &#9632;</div>
+  Days in Schedule: {{ .B_Count }} <br>
+</div>
+<hr style="content: Schedule;">
+</hr>
+<table align="center" title="Schedule">
+  {{ range .Months }}
+  <tr>
+    <td>
+      <table style="width:100%;">
+        <thead>
+          <tr>
+            <th colspan="7">{{ .MonthName }} {{ .Year }}</th>
+          </tr>
+          <tr>
+            <th>Sun</th>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range .Weeks }}
+          <tr style="height:100px">
+            {{ range .Days }}
+            {{ if gt .Day 0 }}
+            <td class="{{ if .Highlight }}highlight{{ end }}" style="background-color: {{ .Color }}; width:14.5%;">
+              {{ .Day }}<br>
+              {{ .Name }}
+            </td>
+            {{ else }}
+            <td class="">-</td>
+            {{ end }}
+            {{ end }}
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+    </td>
+  </tr>
+  {{ end }}
+</table>
