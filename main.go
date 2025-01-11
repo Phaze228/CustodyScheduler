@@ -401,44 +401,6 @@ func CreateSchedule(pa, pb Allotment, startDate, endDate time.Time) Schedule {
 	}
 }
 
-// func CreateSchedule(pa, pb Allotment, startDate, endDate time.Time) Schedule {
-// 	if pa.Parent() != PARENT_A {
-// 		log.Printf("parent b is first on schedule\n")
-// 	}
-// 	DASHES := strings.Repeat("-", 10)
-// 	fmt.Printf("\n%s[Parental Debug]%s\n\n", DASHES, DASHES)
-// 	gParentACount = 0
-// 	gParentBCount = 0
-// 	holidays := CreateEntries(pa, pb)
-// 	dleftover := time.Duration(0)
-// 	mleftover := time.Duration(0)
-// 	schedule_dates := make(map[string]Day, 0)
-// 	switched := 0
-// 	curYear := startDate.Year()
-//
-// 	for startDate.Before(endDate) {
-// 		getDays(&startDate, pa, &holidays, &schedule_dates, &dleftover)
-// 		if startDate.Year() > curYear {
-// 			fmt.Printf("[%d] - %d switches\n", curYear, switched)
-// 			switched = 0
-// 			curYear = startDate.Year()
-// 		}
-// 		switched++
-// 		getDays(&startDate, pb, &holidays, &schedule_dates, &mleftover)
-// 		if startDate.Year() > curYear {
-// 			fmt.Printf("[%d] - %d switches\n", curYear, switched)
-// 			switched = 0
-// 			curYear = startDate.Year()
-// 		}
-// 		switched++
-// 	}
-// 	fmt.Printf("\n%s [END] %s\n", DASHES, DASHES)
-//
-// 	return Schedule{
-// 		schedule_dates,
-// 	}
-// }
-
 func getMaxAllowedDays(p Allotment, s time.Time) time.Duration {
 	e := s.AddDate(p.Allotment())
 	duration := e.Sub(s)
