@@ -66,7 +66,7 @@ var (
 	ThanksgivingDay = RelativeHoliday{HOLIDAY_THANKSGIVING, time.November, time.Thursday, FOURTH} // Fourth Thursday of November
 	MLK_Day         = RelativeHoliday{HOLIDAY_MLK_DAY, time.January, time.Monday, THIRD}          // Third Monday of Januaray
 	PresidentsDay   = RelativeHoliday{HOLIDAY_PRESIDENTS_DAY, time.February, time.Monday, THIRD}  // Third Monday of Januaray
-	Mothers         = RelativeHoliday{HOLIDAY_PRESIDENTS_DAY, time.May, time.Sunday, SECOND}      // Second Sunday of May
+	MothersDay      = RelativeHoliday{HOLIDAY_PRESIDENTS_DAY, time.May, time.Sunday, SECOND}      // Second Sunday of May
 	ArmedForcesDay  = RelativeHoliday{HOLIDAY_ARMED_FORCES_DAY, time.May, time.Saturday, THIRD}   // Third Saturday of May
 	FathersDay      = RelativeHoliday{HOLIDAY_FATHERS_DAY, time.June, time.Sunday, FOURTH}        // Third Sunday of June
 	ParentsDay      = RelativeHoliday{HOLIDAY_PARENTS_DAY, time.July, time.Sunday, FOURTH}        // Fourth Sunday of June
@@ -102,10 +102,6 @@ func (h RelativeHoliday) CalculateDate(year int, timezone *time.Location) time.T
 	return target
 }
 
-// func (h RelativeHoliday) CalculateTransition(year int, timezone *time.Location, transitionTime time.Duration) time.Time {
-// 	return h.CalculateDate(year, timezone).Add(transitionTime)
-// }
-
 func (h RelativeHoliday) getName() string {
 	return h.Name
 }
@@ -124,9 +120,6 @@ func (h StaticHoliday) CalculateDate(year int, timezone *time.Location) time.Tim
 	return time.Date(year, h.Month, h.Day, 0, 0, 0, 0, timezone)
 }
 
-//	func (h StaticHoliday) CalculateTransition(year int, timezone *time.Location, transitionTime time.Duration) time.Time {
-//		return time.Date(year, h.Month, h.Day, 0, 0, 0, 0, timezone).Add(transitionTime)
-//	}
 func (h StaticHoliday) getName() string {
 	return h.Name
 }
@@ -161,6 +154,7 @@ type Holiday interface {
 	getMonth() time.Month
 }
 
+// This is wild isn't it?
 func calculateEaster(year int, tz *time.Location) time.Time {
 	a := year % 19
 	b := year / 100

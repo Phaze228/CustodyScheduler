@@ -149,17 +149,18 @@ func initSchedule(w http.ResponseWriter, r *http.Request) {
 	if !gParentAFirst {
 		a, b = b, a
 	}
+
 	gSchedule = CreateSchedule(a, b, gStartDate, gStartDate.AddDate(gForYears, 0, 0))
 
 }
 
-func allotmentsFromFormData(f url.Values) (Allotment, Allotment) {
+func allotmentsFromFormData(f url.Values) (Allotments, Allotments) {
 	gHolidayPref = make(map[string]Parent, 0)
 	tz, err := time.LoadLocation(f.Get("timeZone"))
 	if err != nil {
 		log.Printf("Could not parse timezone")
 	}
-	year, err := time.Parse(YYYYMMDD, f.Get("startYear"))
+	year, err := time.ParseInLocation(YYYYMMDD, f.Get("startYear"), tz)
 	if err != nil {
 		log.Printf("Could not parse start year")
 	}
@@ -177,7 +178,8 @@ func allotmentsFromFormData(f url.Values) (Allotment, Allotment) {
 		gParentAFirst = false
 
 	}
-	gStartDate = year.In(gTimezone)
+	gStartDate = year
+
 	holidaysA := make([]Holiday, 0)
 	holidaysB := make([]Holiday, 0)
 	for _, h := range HOLIDAYS {
@@ -241,37 +243,18 @@ func allotmentsFromFormData(f url.Values) (Allotment, Allotment) {
 			break
 		}
 	}
-	var parentA Allotment
-	var parentB Allotment
-	if unitA == DAY {
-		parentA = &DayAllotment{
-			Count:        parsedTimeA,
-			PriorityDays: holidaysA,
-			Custodian:    PARENT_A,
-		}
-
-	} else {
-		parentA = &MonthAllotment{
-			PriorityDays: holidaysA,
-			Count:        parsedTimeA,
-			Custodian:    PARENT_A,
-		}
-
+	parentA := Allotments{
+		Type:         unitA,
+		Count:        parsedTimeA,
+		PriorityDays: holidaysA,
+		Custodian:    PARENT_A,
 	}
-	if unitB == DAY {
 
-		parentB = &DayAllotment{
-			Count:        parsedTimeB,
-			PriorityDays: holidaysB,
-			Custodian:    PARENT_B,
-		}
-	} else {
-		parentB = &MonthAllotment{
-			Count:        parsedTimeB,
-			PriorityDays: holidaysB,
-			Custodian:    PARENT_B,
-		}
-
+	parentB := Allotments{
+		Type:         unitB,
+		Count:        parsedTimeB,
+		PriorityDays: holidaysB,
+		Custodian:    PARENT_B,
 	}
 
 	return parentA, parentB
